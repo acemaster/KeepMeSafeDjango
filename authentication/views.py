@@ -1,8 +1,10 @@
 from django.shortcuts import render
 from authentication.forms import UserForm,UserProfileForm
 from datetime import datetime
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect,JsonResponse
 from django.contrib.auth import authenticate,login,logout
+from .models import UserProfile,UserMessages,UserLocation,User
+import json
 
 from django.contrib import messages
 # Create your views here.
@@ -83,3 +85,21 @@ def dashboard(request):
 def _logout(request):
 	logout(request)
 	return HttpResponseRedirect('/')
+
+
+def addLocation(request):
+	success=0
+	if request.method == 'POST':
+		latitude=request.POST['lat']
+		longt=request.POST['longt']
+		current_user=request.user
+		user_loc=UserLocation()
+		user_loc.latitude=latitude
+		user_loc.longt=longt
+		user_loc.user=current_user
+		user_loc.save()
+		print user_loc
+		success=1
+	return JsonResponse({'success': success})
+
+

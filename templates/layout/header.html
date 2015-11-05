@@ -73,6 +73,7 @@
 	  <div class="row">
 	  	<!-- Safety list load over here -->
 	  </div>
+	 </div>
     <div class="col s9 m9 l9">  
  {%endif%}
 {%block content%}
@@ -81,8 +82,11 @@
 </div>
 </div>
 {%endif%}
-	<script src="{%static 'js/jquery.js'%}" type="text/javascript" charset="utf-8" ></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js" type="text/javascript" charset="utf-8" ></script>
+	<script type="text/javascript" src="{%static 'js/js.cookie.js'%}"></script>
 	<script src="{%static 'materialize/js/materialize.min.js'%}" type="text/javascript" charset="utf-8" ></script>
+    <script type="text/javascript" src="{%static 'js/custom.js'%}"></script>
+    <script type="text/javascript" src="{%static 'js/map.js'%}"></script>
     <script type="text/javascript">
     var screenHeight = $(window).height(); 
     console.log(screenHeight);
@@ -102,5 +106,7 @@ $(window).resize(function () {
     });
 });
     </script>
+
+
 </body>
 </html>
