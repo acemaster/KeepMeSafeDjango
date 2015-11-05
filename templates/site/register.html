@@ -1,0 +1,64 @@
+{%extends "layout/header.html"%} {%block content%}{%load widget_tweaks %}
+<div class="col-md-9">
+{%if registered%}
+<div class="jumbotron">
+	<h3>Thank you for registering with KeepMeSafe</h3>
+	<p>Return to <a href="/">homepage</a></p>
+</div>
+{%else%}
+    <form class="col s12" id="user_form" method="POST" action="/register/" enctype="multipart/form-data">{% csrf_token %}
+            <h2><legend>SignUp for KeepMeSafe</legend></h2>
+            <div class="row">
+                <!-- <label for="inputName" class="col-lg-2 control-label">Name</label> -->
+                <div class="input-field col s12">
+                {{user_form.first_name|add_class:'form-control input-md'|attr:"placeholder:Name"}}
+                </div>
+            </div>
+            <div class="row">
+                <!-- <label for="inputEmail" class="col-lg-2 control-label">Email</label> -->
+                <div class="input-field col s12">
+                {{user_form.username|add_class:'form-control input-md'|attr:'placeholder:Email'}}
+                </div>
+            </div>
+            <div class="row">
+                <!-- <label for="inputPhone" class="col-lg-2 control-label">Phone Number</label> -->
+                <div class="input-field col s12">
+                    {{profile_form.phoneNumber|add_class:'form-control input-md'|attr:'placeholder:Phone Number'}}
+                </div>
+            </div>
+            <div class="row">
+                <!-- <label for="inputPassword" class="col-lg-2 control-label">Password</label> -->
+                <div class="input-field col s12">
+                    {{user_form.password|add_class:'form-control input-md'|attr:'placeholder:Password'}}
+                     <!-- <div class="checkbox"><label><input type="checkbox"> Checkbox </label> </div>  -->
+                </div>
+            </div>
+            <div class="row">
+                <!-- <label for="inputCollege" class="col-lg-2 control-label">College</label> -->
+                <div class="input-field col s12">
+                	{{profile_form.collegeName|add_class:'form-control input-md'|attr:'placeholder:College Name'}}
+                </div>
+            </div>
+            <div class="row">
+                <!-- <label for="inputDob" class="col-lg-2 control-label">Date of Birth</label> -->
+                <div class="input-field col s12">
+                	{{profile_form.dateOfBirth|add_class:'form-control input-md'|attr:'placeholder:Date of Birth'}}
+                </div>
+            </div>
+            <div class="row">
+                <label for="inputPhoto" class="col-lg-2 control-label">Profile Photo</label>
+                <div class="input-field col s12" style="width: 100%">
+                    {{profile_form.picture|add_class:'btn btn-md btn-primary'}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <button type="submit" class="btn btn-success btn-block" style="width:100%;">Register</button>
+                </div>
+            </div>
+    </form>
+{%endif%}
+</div>
+{%endblock%}
+<!-- 
+     -->

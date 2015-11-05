@@ -1,3 +1,4 @@
 venv/*
 *.pyc
 KeepMeSafe/settings.py
+*.sqlite3

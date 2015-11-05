@@ -1,0 +1,12 @@
+#circle {
+	width: 50%;
+	height: 50%;
+	background: green;
+	-moz-border-radius: 50%;
+	-webkit-border-radius: 50%;
+	border-radius: 50%;
+}
+
+.collection .collection-item.active {
+    background-color: #2196F3;
+ }

@@ -1,0 +1,31 @@
+{%extends "layout/header.html"%}
+{%load staticfiles%}
+{%block content%}
+<br><br><br>
+<div class="row">
+<div class="col s6">
+	<img class="responsive-img" src="{%static 'img/safety.jpg' %}" > 
+</div>
+<form action="/loginuser/" method="POST" class="col s6">
+	{%csrf_token%}
+	<div class="row">
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="email" type="email" class="validate" name="email">
+          <label for="email">Email</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="password" type="password" class="validate" name="password">
+          <label for="password">Password</label>
+        </div>
+      </div>
+       <div class="row">
+        <div class="col s12">
+          <button type="submit" class="waves-effect waves-light btn col s12">Submit</button>
+        </div>
+      </div>
+</form>
+</div>
+{%endblock%}
