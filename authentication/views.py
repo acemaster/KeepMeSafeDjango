@@ -3,7 +3,7 @@ from authentication.forms import UserForm,UserProfileForm
 from datetime import datetime
 from django.http import HttpResponseRedirect,JsonResponse
 from django.contrib.auth import authenticate,login,logout
-from .models import UserProfile,UserMessages,UserLocation,User
+from .models import UserProfile,UserMessages,UserLocation,User,UserSafetyList
 import json
 
 from django.contrib import messages
@@ -80,7 +80,7 @@ def register(request):
 
 
 def dashboard(request):
-	return render(request,'site/dashboard.html')
+	return render(request,'site/dashboard.html',{'page': 'dashboard'})
 
 def _logout(request):
 	logout(request)
@@ -93,13 +93,59 @@ def addLocation(request):
 		latitude=request.POST['lat']
 		longt=request.POST['longt']
 		current_user=request.user
-		user_loc=UserLocation()
-		user_loc.latitude=latitude
-		user_loc.longt=longt
-		user_loc.user=current_user
-		user_loc.save()
-		print user_loc
+		us=UserLocation.objects.filter(user=current_user)
+		if(len(us) == 0):
+			user_loc=UserLocation()
+			user_loc.latitude=latitude
+			user_loc.longt=longt
+			user_loc.user=current_user
+			user_loc.save()
+		else:
+			us=UserLocation.objects.get(user=current_user)
+			us.latitude=latitude
+			us.longt=longt
+			us.save()
+		# print user_loc
 		success=1
 	return JsonResponse({'success': success})
+
+
+def safetylist(request):
+	friendslistfrom=UserSafetyList.objects.filter(userto=request.user).filter(status=2)
+	friendslistto=UserSafetyList.objects.filter(userfrom=request.user).filter(status=2)
+	friends=[]
+	for f in friendslistto:
+		friends.append(f.userfrom)
+	for f in friendslistfrom:
+		friends.append(f.userto)
+	return render(request,'site/safetylist.html',{'page': 'safety','friends':friends})
+
+def getlist(request):
+	search_term=''
+	if request.method == 'POST':
+		search_term=request.POST['search_term']
+	if len(search_term) == 0:
+		users=User.objects.all()
+	else:
+		users=User.objects.filter(first_name__startswith=search_term)
+	print users
+	response={}
+	response['users']=[]
+	for u in users:
+		if u.is_superuser == False:
+			response['users'].append({'name': u.first_name,'picture': u.userprofile.picture.url,'id':u.id,'email':u.username})
+	return JsonResponse(response)
+
+def makefriend(request):
+	if request.method == 'POST':
+		friend_id=request.POST['id']
+	friend=User.objects.get(id=friend_id)
+	frndreq=UserSafetyList()
+	frndreq.userto=friend
+	frndreq.userfrom=request.user
+	frndreq.status=1
+	frndreq.save()
+	return JsonResponse({'success': 1})
+
 
 

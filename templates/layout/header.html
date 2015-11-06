@@ -65,7 +65,7 @@
 	  <div class="row">
 	  	<div class="collection">
         <a href="#!" class="collection-item">Profile</a>
-        <a href="#!" class="collection-item">Safety List</a>
+        <a href="/safetylist" class="collection-item">Safety List</a>
         <a href="#!" class="collection-item">People around you</a>
         <a href="#!" class="collection-item">Requests</a>
       </div>
@@ -86,7 +86,11 @@
 	<script type="text/javascript" src="{%static 'js/js.cookie.js'%}"></script>
 	<script src="{%static 'materialize/js/materialize.min.js'%}" type="text/javascript" charset="utf-8" ></script>
     <script type="text/javascript" src="{%static 'js/custom.js'%}"></script>
+    {%if page == 'dashboard'%}
     <script type="text/javascript" src="{%static 'js/map.js'%}"></script>
+    {%elif page == 'safety' %}
+    <script type="text/javascript" src="{%static 'js/safety.js'%}"></script>
+    {%endif%}
     <script type="text/javascript">
     var screenHeight = $(window).height(); 
     console.log(screenHeight);

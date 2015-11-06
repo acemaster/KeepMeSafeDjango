@@ -25,8 +25,8 @@ class UserLocation(models.Model):
 
 
 class UserMessages(models.Model):
-    userto=models.OneToOneField(User, unique=True, related_name='message_to')
-    userfrom=models.OneToOneField(User, unique=True, related_name='message_from')
+    userto=models.ForeignKey(User, related_name='message_to')
+    userfrom=models.ForeignKey(User,related_name='message_from')
     messages=models.CharField(max_length=1000)
     message_data=models.DateField(auto_now=True)
     def __unicode__(self):
@@ -34,8 +34,8 @@ class UserMessages(models.Model):
 
 
 class UserSafetyList(models.Model):
-    userto=models.OneToOneField(User, unique=True, related_name='List_to')
-    userfrom=models.OneToOneField(User, unique=True, related_name='List_from')
+    userto=models.ForeignKey(User, related_name='List_to')
+    userfrom=models.ForeignKey(User, related_name='List_from')
     status=models.IntegerField()
     def __unicode__(self):
         return self.userto.first_name

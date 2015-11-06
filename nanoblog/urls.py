@@ -14,6 +14,9 @@ urlpatterns = patterns('',
     url(r'^dashboard/', 'authentication.views.dashboard'),
     url(r'^logout/', 'authentication.views._logout'),
     url(r'^updatelatlongt/', 'authentication.views.addLocation'),
+    url(r'^safetylist/', 'authentication.views.safetylist'),
+    url(r'^getlist/', 'authentication.views.getlist'),
+    url(r'^makefriend/', 'authentication.views.makefriend'),
     
 )
 
