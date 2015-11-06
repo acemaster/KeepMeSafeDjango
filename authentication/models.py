@@ -39,3 +39,20 @@ class UserSafetyList(models.Model):
     status=models.IntegerField()
     def __unicode__(self):
         return self.userto.first_name
+
+class UserStatus(models.Model):
+    user=models.OneToOneField(User)
+    message=models.CharField(max_length=100)
+    safety_code=models.CharField(max_length=100,null=True)
+    safety_status=models.BooleanField(default=True)
+    def __unicode__(self):
+        return self.user.first_name
+
+
+class UserNotifications(models.Model):
+    user=models.ForeignKey(User, related_name='notif_to')
+    userfrom=models.ForeignKey(User, related_name='notif_from')
+    message=models.CharField(max_length=100)
+    read=models.IntegerField(default=0)
+    def __unicode__(self):
+        return self.user.first_name

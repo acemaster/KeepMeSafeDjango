@@ -17,6 +17,17 @@ urlpatterns = patterns('',
     url(r'^safetylist/', 'authentication.views.safetylist'),
     url(r'^getlist/', 'authentication.views.getlist'),
     url(r'^makefriend/', 'authentication.views.makefriend'),
+    url(r'^frequests/', 'authentication.views.frequests'),
+    url(r'^acceptreq/', 'authentication.views.acceptreq'),
+    url(r'^rejectreq/', 'authentication.views.rejectreq'),
+    url(r'^aroundme/', 'authentication.views.aroundme'),
+    url(r'^iamnotsafe/', 'authentication.views.notsafe'),
+    url(r'^getnotification/', 'authentication.views.getnotifications'),
+    url(r'^readnotification/', 'authentication.views.readnotification'),
+    url(r'^recnotification/', 'authentication.views.recievenotification'),
+    url(r'^notifications/', 'authentication.views.notifications'),
+    url(r'^checksafe/', 'authentication.views.checksafe'),
+    url(r'^getcode/', 'authentication.views.getcode'),
     
 )
 

@@ -1,0 +1,67 @@
+{%extends "layout/header.html"%}
+{%block content%}
+<div class="row">
+	<div class="col s12">
+	{%for n in notifications %}
+      <ul class="collection">
+        <li class="collection-item avatar">
+          <img src="{{BASE_URL}}/media/{{n.userfrom.userprofile.picture}}" alt="" class="circle">
+          <span class="title">{{n.userfrom.first_name}}</span>
+          <p><br>
+          </p>
+          <p onclick="readnotification({{n.id}},{{n.userfrom.id}})">{{n.message}}</p>
+        </li>
+ </ul>
+	{%endfor%}
+	</div>
+</div>
+<div class="row">
+    <div class="col s12" align="center">
+        <h1 id="code"></h1>
+</div>
+<script type="text/javascript">
+	function readnotification(id,frid){
+    	$.ajax({
+        			url : "/readnotification/", // the endpoint
+        			type : "POST", // http method
+        			data : {'id': id}, // data sent with the post request
+
+        // handle a successful response
+				    success : function(json) {
+				         // remove the value from the input
+				        // console.log(json);
+				        console.log("Success");    	
+				    },
+
+				    // handle a non-successful response
+				    error : function(xhr,errmsg,err) {
+				        console.log("Error");
+				        // Materialize.toast('Server Error', 4000); // provide a bit more info about the error to the console
+				    }
+				});
+        $.ajax({
+                    url : "/getcode/", // the endpoint
+                    type : "POST", // http method
+                    data : {'id': frid}, // data sent with the post request
+
+        // handle a successful response
+                    success : function(json) {
+                         // remove the value from the input
+                        // console.log(json);
+                          Materialize.toast('Code recieved', 4000);
+                          console.log(json);
+                          $('#code').text(json.code);
+                     
+                    },
+
+                    // handle a non-successful response
+                    error : function(xhr,errmsg,err) {
+                        console.log("Error");
+                        // Materialize.toast('Server Error', 4000); // provide a bit more info about the error to the console
+                    }
+                });
+
+    }
+
+</script>
+{%endblock%}

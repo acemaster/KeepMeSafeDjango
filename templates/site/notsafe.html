@@ -1,0 +1,10 @@
+{%extends "layout/header.html"%}
+{%block content%}
+<form action="/checksafe/" method="POST">
+{% csrf_token %} 
+ <input type="hidden" name='id' value='{{safety.user.id}}'>
+ <input type="text" name='code' placeholder="Type code here">
+ <input type="submit" value="Submit">
+</form>
+
+{%endblock%}

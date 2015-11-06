@@ -19,11 +19,12 @@
 </div>
 <div class="col s6">
 {%if friends %}
+<h2>Safety List</h2>
 <ul class="collection">
 	{%for f in friends %}
 	    <li class="collection-item avatar">
 		  <img src="{{BASE_URL}}/media/{{f.userprofile.picture}}" alt="" class="circle">
-		  <span class="title">{{f.name}}</span>
+		  <span class="title">{{f.first_name}}</span>
 		  <p><br>
 		  </p>
 		  <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>

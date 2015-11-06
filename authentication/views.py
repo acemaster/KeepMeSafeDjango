@@ -3,14 +3,19 @@ from authentication.forms import UserForm,UserProfileForm
 from datetime import datetime
 from django.http import HttpResponseRedirect,JsonResponse
 from django.contrib.auth import authenticate,login,logout
-from .models import UserProfile,UserMessages,UserLocation,User,UserSafetyList
+from .models import UserProfile,UserMessages,UserLocation,User,UserSafetyList,UserStatus,UserNotifications
 import json
+import hashlib
+from random import randint
 
 from django.contrib import messages
 # Create your views here.
 def index(request):
 	title="homepage"
-	return render(request,'site/index.html',{'title':title})
+	if request.user.is_authenticated():
+		return render(request,'site/dashboard.html',{'page': 'dashboard'})
+	else:
+		return HttpResponseRedirect('/login')
 
 def _login(request):
 	title="Login"
@@ -114,9 +119,9 @@ def safetylist(request):
 	friendslistfrom=UserSafetyList.objects.filter(userto=request.user).filter(status=2)
 	friendslistto=UserSafetyList.objects.filter(userfrom=request.user).filter(status=2)
 	friends=[]
-	for f in friendslistto:
-		friends.append(f.userfrom)
 	for f in friendslistfrom:
+		friends.append(f.userfrom)
+	for f in friendslistto:
 		friends.append(f.userto)
 	return render(request,'site/safetylist.html',{'page': 'safety','friends':friends})
 
@@ -146,6 +151,190 @@ def makefriend(request):
 	frndreq.status=1
 	frndreq.save()
 	return JsonResponse({'success': 1})
+
+
+def frequests(request):
+	friendsto=UserSafetyList.objects.filter(userfrom=request.user)
+	friendsfrom=UserSafetyList.objects.filter(userto=request.user,status=1)
+	return render(request,'site/frequests.html',{'page': 'requests','friendsto':friendsto,'friendsfrom': friendsfrom})
+
+
+def acceptreq(request):
+	if request.method == 'POST':
+		friend_id=request.POST['id']
+	friend=User.objects.get(id=friend_id)
+	frndreq=UserSafetyList.objects.get(userfrom=friend,userto=request.user)
+	frndreq.status=2
+	frndreq.save()
+	return JsonResponse({'success': 1})
+
+
+def rejectreq(request):
+	if request.method == 'POST':
+		friend_id=request.POST['id']
+	friend=User.objects.get(id=friend_id)
+	frndreq=UserSafetyList.objects.get(userfrom=friend,userto=request.user)
+	frndreq.status=3
+	frndreq.save()
+	return JsonResponse({'success': 1})
+
+def aroundme(request):
+	friendslistfrom=UserSafetyList.objects.filter(userto=request.user).filter(status=2)
+	friendslistto=UserSafetyList.objects.filter(userfrom=request.user).filter(status=2)
+	friends=[]
+	for f in friendslistfrom:
+		friends.append(f.userfrom)
+	for f in friendslistto:
+		friends.append(f.userto)
+	return render(request,'site/aroundme.html',{'page': 'aroundme','friends':friends})
+
+def checksafe(request):
+	message="Error"
+	if request.method == 'POST':
+		friend_id=request.POST['id']
+		code=request.POST['code']
+		us=UserStatus.objects.get(user=User.objects.get(id=friend_id))
+		if us.safety_code == code:
+			print "Success"
+			us.safety_code=''
+			us.safety_status=True
+			us.save()
+			message="Success"
+			notifications=UserNotifications.objects.filter(userfrom=User.objects.get(id=friend_id))
+			for n in notifications:
+				n.read=2
+				n.save()
+		else:
+			message="Incorrect code"
+	response={}
+	response['message']=message
+	return HttpResponseRedirect('/')
+
+
+def notsafe(request):
+	try:
+		us=UserStatus.objects.get(user=request.user)
+	except:
+		us=UserStatus()
+	us.user=request.user
+	us.safety_status=False
+	st=request.user.first_name + str(request.user.id)
+	# us.safety_code=hashlib.md5(st).hexdigest()
+	us.safety_code=randint(1000, 9999)
+	us.save()
+	friendslistfrom=UserSafetyList.objects.filter(userto=request.user).filter(status=2)
+	friendslistto=UserSafetyList.objects.filter(userfrom=request.user).filter(status=2)
+	friends=[]
+	for f in friendslistfrom:
+		friends.append(f.userfrom)
+	for f in friendslistto:
+		friends.append(f.userto)
+	for f in friends:
+		try:
+			temp=UserNotifications.objects.get(user=f,userfrom=request.user)
+		except:
+			temp=None
+		if temp:
+			temp.message=request.user.first_name + " is in trouble please help"
+			temp.read=False
+			temp.save()
+		else:
+			temp=UserNotifications()
+			temp.user=f
+			temp.userfrom=request.user
+			temp.message=request.user.first_name + " is in trouble please help"
+			temp.read=False
+			temp.save()
+	return render(request,'site/notsafe.html',{'page': 'notsafe','safety':us})
+
+
+def getnotifications(request):
+	response={}
+	try:
+		temp=UserNotifications.objects.get(user=request.user,read=0)
+	except UserNotifications.DoesNotExist:
+		temp=None
+	if temp:
+		response['success']=1
+		response['message']=temp.message
+		response['from']=temp.userfrom.id
+		response['id']=temp.id
+	else:
+		try:
+			temp=UserNotifications.objects.get(user=request.user,read=1)
+		except UserNotifications.DoesNotExist:
+			temp=None
+		if temp:
+			response['success']=1
+			response['message']=temp.message
+			response['from']=temp.userfrom.id
+			response['id']=temp.id
+		else:
+			response['success']=0
+	print response
+	return JsonResponse(response)
+
+
+def readnotification(request):
+	if request.method == 'POST':
+		msg_id=request.POST['id']
+		temp=UserNotifications.objects.get(id=msg_id)
+		temp.read=2
+		temp.save()
+	return JsonResponse({'success':1})
+
+def recievenotification(request):
+	if request.method == 'POST':
+		msg_id=request.POST['id']
+		temp=UserNotifications.objects.get(id=msg_id)
+		temp.read=1
+		temp.save()
+	return JsonResponse({'success':1})
+
+def notifications(request):
+	try:
+		temp1=UserNotifications.objects.filter(user=request.user,read=0)
+	except UserNotifications.DoesNotExist:
+		temp1=None
+	try:
+		temp2=UserNotifications.objects.filter(user=request.user,read=1)
+	except UserNotifications.DoesNotExist:
+		temp2=None
+	if temp1:
+		temp=temp1
+	elif temp2:
+		temp=temp2
+	else:
+		temp=None
+	return render(request,'site/notifications.html',{'page': 'notifications','notifications':temp})
+
+
+def getcode(request):
+	response={}
+	response['success']=0
+	if request.method =='POST':
+		friend_id=request.POST['id']
+		try:
+			us=UserStatus.objects.get(user=User.objects.get(id=friend_id))
+			print us
+		except:
+			us=None
+		if us:
+			response['code']=us.safety_code
+			response['success']=1
+		else:
+			response['success']=0
+
+	return JsonResponse(response)
+
+
+
+
+
+
+
+
+
 
 
 
