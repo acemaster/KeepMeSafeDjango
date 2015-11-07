@@ -37,7 +37,7 @@ $(document).ready(function(){
         // handle a non-successful response
         error : function(xhr,errmsg,err) {
             console.log("Error");
-            Materialize.toast('Server Error', 4000); // provide a bit more info about the error to the console
+            // Materialize.toast('Server Error', 4000); // provide a bit more info about the error to the console
         }
 });
 	}
