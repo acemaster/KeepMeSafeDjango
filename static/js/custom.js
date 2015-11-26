@@ -27,11 +27,17 @@ $.ajaxSetup({
         }
     }
 });
+var timerem=5;
 
+function timer(){
+	timerem=timerem-1;
+	$('#timeout').html(timerem);
+}
 
 console.log("Check");
 if(Cookies.get('safe')!=1){
 	console.log("Not safe");
+	var myVar2 = setInterval(timer, 1000);
 	var myVar = setTimeout(gotopage, 5000);
 }
 else{
@@ -40,7 +46,4 @@ else{
 }
 });
 
-$(window).unload(function() {
-   Cookies.remove('safe');
-});
 
