@@ -9,6 +9,17 @@
 	</head>
 <body>
 	<!-- this is a navbar -->
+	{%if user.is_authenticated%}
+
+	<div class="overlay" id="safeoverlay">
+	</div>
+	<div class="modal-safe" align="center" id="safemodal">
+	 <p>You have opened the page. This means you are unsafe</p>
+	 <h2>Declaring Not safe in <span id="timeout"></span></h2>
+	 <button class="waves-effect waves-light btn" id="safe-button">Wait, I am Safe</button>
+	</div>
+	{%endif%}
+
 	<nav class="blue">
 		<div class="nav-wrapper">
 			<div class="brand-logo">
@@ -68,7 +79,7 @@
         <a href="/safetylist" class="collection-item">Safety List</a>
         <a href="/aroundme" class="collection-item">People around you</a>
         <a href="/frequests" class="collection-item">Requests</a>
-        <a href="/notifications" class="collection-item">Notifications</a>
+        <a href="/notifications" class="collection-item" id="notification">Notifications</a>
       </div>
 	  </div>
 	  <div class="row">
@@ -142,21 +153,21 @@
     <script type="text/javascript">
     var screenHeight = $(window).height(); 
     console.log(screenHeight);
-var row = $('#sidebar');
+	var row = $('#sidebar');
 
 // Assign that height to the .row
-row.css({
-    'height': screenHeight + 'px',
-});
+	row.css({
+	    'height': screenHeight + 'px',
+	});
 
-// This makes the div's height responsive when you resize the screen or the window of the browser.
-$(window).resize(function () {
-	// console.log("Hello");
-    screenHeight = $(window).height();
-    row.css({
-        'height': screenHeight + 'px',
-    });
-});
+	// This makes the div's height responsive when you resize the screen or the window of the browser.
+	$(window).resize(function () {
+		// console.log("Hello");
+	    screenHeight = $(window).height();
+	    row.css({
+	        'height': screenHeight + 'px',
+	    });
+	});
     </script>
 
 

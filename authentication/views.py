@@ -220,7 +220,8 @@ def notsafe(request):
 	us.safety_status=False
 	st=request.user.first_name + str(request.user.id)
 	# us.safety_code=hashlib.md5(st).hexdigest()
-	us.safety_code=randint(1000, 9999)
+	if us.safety_code == '':
+		us.safety_code=randint(1000, 9999)
 	us.save()
 	friendslistfrom=UserSafetyList.objects.filter(userto=request.user).filter(status=2)
 	friendslistto=UserSafetyList.objects.filter(userfrom=request.user).filter(status=2)
@@ -250,6 +251,7 @@ def notsafe(request):
 
 def getnotifications(request):
 	response={}
+	count=0
 	try:
 		temp=UserNotifications.objects.get(user=request.user,read=0)
 	except UserNotifications.DoesNotExist:
@@ -307,6 +309,28 @@ def notifications(request):
 	else:
 		temp=None
 	return render(request,'site/notifications.html',{'page': 'notifications','notifications':temp})
+
+
+def getnotificationcount(request):
+	try:
+		temp1=UserNotifications.objects.filter(user=request.user,read=0)
+	except UserNotifications.DoesNotExist:
+		temp1=None
+	try:
+		temp2=UserNotifications.objects.filter(user=request.user,read=1)
+	except UserNotifications.DoesNotExist:
+		temp2=None
+	if temp1:
+		temp=temp1
+	elif temp2:
+		temp=temp2
+	else:
+		temp=None
+	if temp:
+		count=len(temp)
+	else:
+		count=0
+	return JsonResponse({'count':count})
 
 
 def getcode(request):
