@@ -56,3 +56,10 @@ class UserNotifications(models.Model):
     read=models.IntegerField(default=0)
     def __unicode__(self):
         return self.user.first_name
+
+
+class UserTracking(models.Model):
+    user=models.OneToOneField(User)
+    track=models.CharField(max_length=2000,default='')
+    def __unicode__(self):
+        return self.user.first_name

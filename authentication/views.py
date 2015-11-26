@@ -3,7 +3,7 @@ from authentication.forms import UserForm,UserProfileForm
 from datetime import datetime
 from django.http import HttpResponseRedirect,JsonResponse
 from django.contrib.auth import authenticate,login,logout
-from .models import UserProfile,UserMessages,UserLocation,User,UserSafetyList,UserStatus,UserNotifications
+from .models import UserProfile,UserMessages,UserLocation,User,UserSafetyList,UserStatus,UserNotifications,UserTracking
 import json
 import hashlib
 from random import randint
@@ -350,6 +350,24 @@ def getcode(request):
 			response['success']=0
 
 	return JsonResponse(response)
+
+def addtracking(response):
+	success=0
+	if request.method == 'POST':
+		lat=request.POST['lat']
+		longt=request.POST['longt']
+		friend_id=request.POST['id']
+		trac='#'+lat+'|'+longt+'#'
+		friend=User.objects.get(id=friend_id)
+		friend.usertracking.track=friend.usertracking.track+trac
+		friend.usertracking.save()
+		success=1
+	response={}
+	response['success']=success
+	return JsonResponse(response)
+
+
+
 
 
 
