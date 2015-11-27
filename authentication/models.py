@@ -63,3 +63,11 @@ class UserTracking(models.Model):
     track=models.CharField(max_length=2000,default='')
     def __unicode__(self):
         return self.user.first_name
+
+class TweetUserLocation(models.Model):
+    screen_name=models.CharField(max_length=100)
+    latitude=models.CharField(max_length=100)
+    longt=models.CharField(max_length=100)
+    def __unicode__(self):
+        return self.screen_name
+
