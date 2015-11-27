@@ -3,7 +3,7 @@ from authentication.forms import UserForm,UserProfileForm
 from datetime import datetime
 from django.http import HttpResponseRedirect,JsonResponse
 from django.contrib.auth import authenticate,login,logout
-from .models import UserProfile,UserMessages,UserLocation,User,UserSafetyList,UserStatus,UserNotifications
+from .models import UserProfile,UserMessages,UserLocation,User,UserSafetyList,UserStatus,UserNotifications,TweetUserLocation
 import json
 import hashlib
 from random import randint
@@ -352,9 +352,12 @@ def getcode(request):
 	return JsonResponse(response)
 
 
-
-
-
+def aroundmetweet(request):
+	friendslistfrom=TweetUserLocation.objects.all()
+	friends=[]
+	for f in friendslistfrom:
+		friends.append(f)
+	return render(request,'site/aroundmetweet.html',{'page': 'aroundmetweet','friends':friends})
 
 
 

@@ -18,6 +18,13 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # Allow all host headers
 ALLOWED_HOSTS = ['*']
 
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'vivekhtc25@gmail.com'
+EMAIL_HOST_PASSWORD = '3l3m3nts'
+EMAIL_USE_TLS = True
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
 # Static asset configuration
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -66,11 +73,12 @@ WSGI_APPLICATION = 'nanoblog.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
+PROJECT_DIR = os.path.abspath(os.path.dirname(__file__))
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'mydb.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'mydb.sqlite3'),
     }
 }
 

@@ -21,6 +21,7 @@ urlpatterns = patterns('',
     url(r'^acceptreq/', 'authentication.views.acceptreq'),
     url(r'^rejectreq/', 'authentication.views.rejectreq'),
     url(r'^aroundme/', 'authentication.views.aroundme'),
+    url(r'^aroundmetweet/', 'authentication.views.aroundmetweet'),
     url(r'^iamnotsafe/', 'authentication.views.notsafe'),
     url(r'^getnotification/', 'authentication.views.getnotifications'),
     url(r'^getnotificationcount/', 'authentication.views.getnotificationcount'),
@@ -29,6 +30,7 @@ urlpatterns = patterns('',
     url(r'^notifications/', 'authentication.views.notifications'),
     url(r'^checksafe/', 'authentication.views.checksafe'),
     url(r'^getcode/', 'authentication.views.getcode'),
+
     
 )
 
