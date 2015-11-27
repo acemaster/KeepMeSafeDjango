@@ -34,6 +34,9 @@ urlpatterns = patterns('',
     url(r'^forgot2/', 'authentication.views.forgotv'),
     url(r'^forgot3/', 'authentication.views.forgotnp'),
     url(r'^forgotpassword/', 'authentication.views.forgotpassword'),
+    url(r'^checklocation/', 'authentication.views.checklocation'),
+    url(r'^getlocation/', 'authentication.views.getlocation'),
+    url(r'^sendmessage/', 'authentication.views.sendmessage'),
 
 
     

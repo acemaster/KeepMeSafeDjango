@@ -295,6 +295,9 @@ def recievenotification(request):
 	return JsonResponse({'success':1})
 
 def notifications(request):
+	userstat=UserLocation.objects.get(user=request.user)
+	lat=userstat.latitude
+	longt=userstat.longt
 	try:
 		temp1=UserNotifications.objects.filter(user=request.user,read=0)
 	except UserNotifications.DoesNotExist:
@@ -309,7 +312,7 @@ def notifications(request):
 		temp=temp2
 	else:
 		temp=None
-	return render(request,'site/notifications.html',{'page': 'notifications','notifications':temp})
+	return render(request,'site/notifications.html',{'page': 'notifications','notifications':temp,'lat':lat,'longt':longt})
 
 
 def getnotificationcount(request):
@@ -408,9 +411,46 @@ def forgotpassword(request):
 	return render(request,'site/forgotpassword.html',{'page': 'forgotpassword'})
 
 
+def checklocation(request):
+	success=0
+	lat=request.POST['lat']
+	longt=request.POST['longt']
+	us=UserLocation.objects.get(user=request.user)
+	if us.latitude != lat or us.longt != longt:
+		success=1
+	else:
+		success=0
+	return JsonResponse({'success':success})
 
+def getlocation(request):
+	success=0
+	response={}
+	uid=request.POST['id']
+	lat=request.POST['lat']
+	longt=request.POST['longt']
+	user=User.objects.get(id=uid)
+	us=UserLocation.objects.get(user=user)
+	if us.latitude != lat or us.longt != longt:
+		response['success']=1
+		response['lat']=us.latitude
+		response['longt']=us.longt
+	else:
+		response['success']=0
+	return JsonResponse(response)
 
-
-
-
+def sendmessage(request):
+	response={}
+	success=0
+	friendslistfrom=UserSafetyList.objects.filter(userto=request.user).filter(status=2)
+	friendslistto=UserSafetyList.objects.filter(userfrom=request.user).filter(status=2)
+	friends=[]
+	for f in friendslistfrom:
+		friends.append(f.userfrom)
+	for f in friendslistto:
+		friends.append(f.userto)
+	for f in friends:
+		send_mail('User has moved', 'Location is'+str(request.POST['lat'])+' : '+str(request.POST['longt']), 'webmaster@web.com',[f.username], fail_silently=False)
+	success=1
+	response['success']=success
+	return JsonResponse(response)
 

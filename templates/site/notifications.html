@@ -18,9 +18,12 @@
 <div class="row">
     <div class="col s12" align="center">
         <h1 id="code"></h1>
+         <div id="googleMap" style="width:100%;min-height:500px;"></div>
 </div>
 <script type="text/javascript">
+var frid1="";
 	function readnotification(id,frid){
+      frid1=frid;
     	$.ajax({
         			url : "/readnotification/", // the endpoint
         			type : "POST", // http method
@@ -60,8 +63,74 @@
                         // Materialize.toast('Server Error', 4000); // provide a bit more info about the error to the console
                     }
                 });
+        loadScript();
+}
 
+
+
+
+function initialize() {
+      var myLatlng = new google.maps.LatLng({{lat}},{{longt}});
+      var myOptions = {
+        zoom: 6,
+        center: myLatlng,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      }
+
+      map = new google.maps.Map(document.getElementById("googleMap"), myOptions);
+      lat={{lat}};
+       longt={{longt}};
+       var myLatlng = new google.maps.LatLng(lat,longt);
+         var marker = new google.maps.Marker({
+         position: myLatlng,
+         title:"ME"
+    });
+         marker.setMap(map);
+         console.log("check");
+         setInterval(function(){
+         $.ajax({
+                    url : "/getlocation/", // the endpoint
+                    type : "POST", // http method
+                    data : {'id': frid1, 'lat':lat,'longt':longt}, // data sent with the post request
+
+        // handle a successful response
+                    success : function(json) {
+                         // remove the value from the input
+                        console.log(json);
+                          if(json.success == 1){
+                            lat=json.lat;
+                            longt=json.longt;
+                            var myLatlng = new google.maps.LatLng(lat,longt);
+                            var marker= new google.maps.Marker({
+                            position: myLatlng,
+                            title:"Friend"
+
+                            });
+                            marker.setMap(map);
+                      
+                     }
+                    },
+
+                    // handle a non-successful response
+                    error : function(xhr,errmsg,err) {
+                        console.log("Error");
+                        // Materialize.toast('Server Error', 4000); // provide a bit more info about the error to the console
+                    }
+          });
+
+        },5000);
+          
+
+ }
+
+    function loadScript() {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src = "http://maps.google.com/maps/api/js?sensor=false&callback=initialize";
+      document.body.appendChild(script);
     }
+
+
 
 </script>
 {%endblock%}
