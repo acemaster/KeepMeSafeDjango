@@ -43,7 +43,7 @@ $(document).ready(function(){
 	}
 
 
-        function countnotifications () {
+function countnotifications () {
         $.ajax({
         url : "/getnotificationcount/", // the endpoint
         type : "POST", // http method

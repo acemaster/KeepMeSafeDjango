@@ -3,10 +3,11 @@ from authentication.forms import UserForm,UserProfileForm
 from datetime import datetime
 from django.http import HttpResponseRedirect,JsonResponse
 from django.contrib.auth import authenticate,login,logout
-from .models import UserProfile,UserMessages,UserLocation,User,UserSafetyList,UserStatus,UserNotifications,TweetUserLocation
+from .models import UserProfile,UserMessages,UserLocation,User,UserSafetyList,UserStatus,UserNotifications,TweetUserLocation,ForgotPassword
 import json
 import hashlib
 from random import randint
+from django.core.mail import send_mail
 
 from django.contrib import messages
 # Create your views here.
@@ -358,6 +359,54 @@ def aroundmetweet(request):
 	for f in friendslistfrom:
 		friends.append(f)
 	return render(request,'site/aroundmetweet.html',{'page': 'aroundmetweet','friends':friends})
+
+def forgotp(request):
+	email=request.POST['email']
+	us=User.objects.get(username=email)
+	response={}
+	success=0
+	if us:
+		try:
+			us2=ForgotPassword.objects.get(user=us)
+		except:
+			us2=ForgotPassword()
+			us2.user=us
+		us2.code=randint(1000, 9999)
+		us2.save()
+		send_mail('Password code', 'Code is '+str(us2.code), 'webmaster@web.com',[us.username], fail_silently=False)
+		success=1
+	else:
+		success=0
+		response['message']="Invalid user"
+	response['success']=success
+	return JsonResponse(response)
+
+
+def forgotv(request):
+	email=request.POST['email']
+	code=request.POST['code']
+	us=User.objects.get(username=email)
+	us2=ForgotPassword.objects.get(user=us)
+	success=0
+	if us2.code == code:
+		success=1
+	else:
+		success=0
+	return JsonResponse({'success': success})
+
+
+def forgotnp(request):
+	email=request.POST['email']
+	password=request.POST['password']
+	us=User.objects.get(username=email)
+	us.password=password
+	us.set_password(us.password)
+	us.save()
+	return JsonResponse({'success':1})
+
+def forgotpassword(request):
+	return render(request,'site/forgotpassword.html',{'page': 'forgotpassword'})
+
 
 
 

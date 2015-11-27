@@ -30,6 +30,11 @@ urlpatterns = patterns('',
     url(r'^notifications/', 'authentication.views.notifications'),
     url(r'^checksafe/', 'authentication.views.checksafe'),
     url(r'^getcode/', 'authentication.views.getcode'),
+    url(r'^forgot1/', 'authentication.views.forgotp'),
+    url(r'^forgot2/', 'authentication.views.forgotv'),
+    url(r'^forgot3/', 'authentication.views.forgotnp'),
+    url(r'^forgotpassword/', 'authentication.views.forgotpassword'),
+
 
     
 )

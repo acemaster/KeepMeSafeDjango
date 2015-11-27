@@ -63,3 +63,10 @@ class TweetUserLocation(models.Model):
     longt=models.CharField(max_length=100)
     def __unicode__(self):
         return self.screen_name
+
+
+class ForgotPassword(models.Model):
+    user=models.OneToOneField(User)
+    code=models.CharField(max_length=100)
+    def __unicode__(self):
+        return self.user.first_name

@@ -23,7 +23,8 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'vivekhtc25@gmail.com'
 EMAIL_HOST_PASSWORD = '3l3m3nts'
 EMAIL_USE_TLS = True
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+EMAIL_FILE_PATH = 'app-messages'
 
 # Static asset configuration
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
