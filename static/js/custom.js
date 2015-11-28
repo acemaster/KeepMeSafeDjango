@@ -28,6 +28,16 @@ $.ajaxSetup({
     }
 });
 var timerem=5;
+var height=$('nav').height();
+
+$('#sidebar2').css({'top':height});
+$('#safeoverlay').css({'top':height});
+$('#sidebar2').hide();
+
+$('#logo').click(function(){
+	$('#sidebar2').toggle();
+	$('#safeoverlay').toggle();
+});
 
 function timer(){
 	timerem=timerem-1;
@@ -41,7 +51,7 @@ if(Cookies.get('safe')!=1){
 	var myVar = setTimeout(gotopage, 5000);
 }
 else{
-	$('#safeoverlay').remove();
+	$('#safeoverlay').hide();
 	$('#safemodal').remove();
 }
 });
